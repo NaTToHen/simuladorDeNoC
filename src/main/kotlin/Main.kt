@@ -11,7 +11,11 @@ fun main(args: Array<String>) {
             print("Qual é o target: ")
             var target = readln().toInt()
 
-            arbitragem(source, target)
+            if(source <= 0 || target <= 0) {
+                println("numeros de 1 á ${quantNodos}")
+            } else {
+                arbitragem(source, target)
+            }
         }
     } else {
         println("O numero maximo de nodos é 10")
@@ -19,7 +23,7 @@ fun main(args: Array<String>) {
 }
 
 fun arbitragem(source: Int, target: Int) {
-    if(source > quantNodos || target > quantNodos || target == source) {
+    if(source > quantNodos || target > quantNodos) {
         println("esse nodo não existe")
     } else {
         roteamento(source, target)
@@ -29,11 +33,12 @@ fun arbitragem(source: Int, target: Int) {
 fun roteamento(source: Int, target: Int) {
     var source = source
     var target = target
-    if(source == 1 && target == quantNodos || source == quantNodos && target == 1) {
+    if(source == 1 && target == quantNodos || source == quantNodos && target == 1 || source == target) {
         println("Proc[${source}] criou a mensagem")
         println("Proc[${source}] enviou a mensagem para o Proc[${target}]")
         println("Proc[${target}] recebeu a mensagem do Proc[${source}]")
         println("Proc[${target}] é o destino e consumiu a mensagem")
+
     } else if(source < target) {
         println("Proc[${source}] criou a mensagem")
         while (source < target) {
