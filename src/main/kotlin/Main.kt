@@ -1,8 +1,26 @@
 import kotlin.math.sign
 
-val quantNodos = readln().toInt()
-
 fun main(args: Array<String>) {
+
+    println("escolha a topologia de rede:")
+    println("[1] Ring")
+    println("[2] Mesh-2D")
+    print("Resposta: ")
+    var escolha = readln().toInt()
+
+    when (escolha) {
+        1 -> {
+            Ring()
+        }
+        2 -> {
+            Mash2D()
+        }
+    }
+}
+
+fun Ring() {
+    val quantNodos = readln().toInt()
+
     val condicao: Int = 1
     if (quantNodos <= 10) {
         while (condicao == 1) {
@@ -14,7 +32,7 @@ fun main(args: Array<String>) {
             if(source <= 0 || target <= 0) {
                 println("numeros de 1 á ${quantNodos}")
             } else {
-                arbitragem(source, target)
+                arbitragem(source, target, quantNodos)
             }
         }
     } else {
@@ -22,15 +40,29 @@ fun main(args: Array<String>) {
     }
 }
 
-fun arbitragem(source: Int, target: Int) {
-    if(source > quantNodos || target > quantNodos) {
-        println("esse nodo não existe")
+fun Mash2D() {
+
+    print("Informe o tamanho da NoC para X: ")
+    var tamanhoX = readln().toInt()
+    print("Informe o tamanho da NoC para Y: ")
+    var tamanhoY = readln().toInt()
+    println("\nConstrução de pacotes:")
+
+    if(tamanhoX <= 9 && tamanhoY <= 9) {
+        acoesMash2D(tamanhoX, tamanhoY)
     } else {
-        roteamento(source, target)
+        println("O tamanho de X e Y precisam ser menores que 10")
     }
 }
 
-fun roteamento(source: Int, target: Int) {
+fun arbitragem(source: Int, target: Int, quantNodos: Int) {
+    if(source > quantNodos || target > quantNodos) {
+        println("esse nodo não existe")
+    } else {
+        roteamento(source, target, quantNodos)
+    }
+}
+fun roteamento(source: Int, target: Int, quantNodos: Int) {
     var source = source
     var target = target
     if(source == 1 && target == quantNodos || source == quantNodos && target == 1 || source == target) {
@@ -63,4 +95,32 @@ fun roteamento(source: Int, target: Int) {
         }
         println("Proc[${target}] é o destino\n" + "Proc[${target}] consumiu a mensagem")
         }
+}
+
+fun acoesMash2D(tamanhoX: Int, tamanhoY: Int) {
+    print("informar origemX: ")
+    val origemX = readln().toInt()
+    print("informar origemY: ")
+    val origemY = readln().toInt()
+
+    print("\ninformar destinoX: ")
+    val destinoX = readln().toInt()
+    print("informar destinoY: ")
+    val destinoY = readln().toInt()
+
+    var matrizNodos = arrayOf<Array<Int>>()
+
+    var origemMatriz = matrizNodos[origemX][origemY]
+    var destinoMatriz = matrizNodos[destinoX][destinoY]
+
+    for (i in 0..tamanhoX) {
+        var linha = arrayOf<Int>()
+        for (j in 0..tamanhoY) {
+            linha+=0
+            if(matrizNodos[i][j] == matrizNodos[origemX][origemY]) {
+
+            }
+        }
+        matrizNodos += linha
+    }
 }
