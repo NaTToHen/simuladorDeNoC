@@ -1,10 +1,12 @@
 import kotlin.math.sign
+import kotlin.random.Random
 
 fun main(args: Array<String>) {
 
     println("escolha a topologia de rede:")
     println("[1] Ring")
     println("[2] Mesh-2D")
+    println("[3] MPSoC")
     print("Resposta: ")
     var escolha = readln().toInt()
 
@@ -14,6 +16,9 @@ fun main(args: Array<String>) {
         }
         2 -> {
             Mash2D()
+        }
+        3 -> {
+            MPSoC()
         }
     }
 }
@@ -41,7 +46,6 @@ fun Ring() {
 }
 
 fun Mash2D() {
-
     print("Informe o tamanho da NoC para X: ")
     var tamanhoX = readln().toInt()
     print("Informe o tamanho da NoC para Y: ")
@@ -108,19 +112,50 @@ fun acoesMash2D(tamanhoX: Int, tamanhoY: Int) {
     print("informar destinoY: ")
     val destinoY = readln().toInt()
 
-    var matrizNodos = arrayOf<Array<Int>>()
-
-    var origemMatriz = matrizNodos[origemX][origemY]
-    var destinoMatriz = matrizNodos[destinoX][destinoY]
-
-    for (i in 0..tamanhoX) {
-        var linha = arrayOf<Int>()
-        for (j in 0..tamanhoY) {
-            linha+=0
-            if(matrizNodos[i][j] == matrizNodos[origemX][origemY]) {
-
-            }
-        }
-        matrizNodos += linha
+    var tamanhoMatriz = readLine()!!.toInt()
+    if (tamanhoMatriz > 9) {
+        println("Tamanho da matriz inválido. Tamanho máximo é 9x9.")
+        return
     }
+
+    var matrizNodos = Array(tamanhoMatriz) { Array(tamanhoMatriz) { Int } }
+}
+
+fun MPSoC() {
+    var matrizNodos = arrayOf(
+        arrayOf("03", "13", "23", "33"),
+        arrayOf("02", "12", "22", "32"),
+        arrayOf("01", "11", "21", "31"),
+        arrayOf("00", "10", "20", "30")
+    )
+
+    println("escolha a aplicação: 1, 2 ou 3")
+    print("resposta: ")
+    val aplicacao = readln().toInt()
+
+    fun app1() {
+        var indexX = 1
+        var indexY = 0
+
+        val inicio = matrizNodos[indexX][indexY]
+        var destino = matrizNodos[indexX+1][indexY]
+
+        println("[P] [INICIANDO COMUNICAÇÃO] [${inicio}] [${destino}]")
+        println("[R] [ARBITRAGEM] [${inicio}] [${destino}]")
+
+        println()
+    }
+
+    when(aplicacao) {
+        1 -> {
+            app1()
+        }
+        2 -> {
+           // app2()
+        }
+        3 -> {
+           // app3()
+        }
+    }
+
 }
