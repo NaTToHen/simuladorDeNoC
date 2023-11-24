@@ -174,7 +174,7 @@ fun MPSoC() {
 
     for (i in 0 until matrizNodos.size) {
         for (j in 0 until matrizNodos[i].size) {
-            matrizNodos[i][j] = "${i}${j}" // Preencha os elementos com identificadores únicos
+            matrizNodos[i][j] = "${i}${j}"
         }
     }
 
