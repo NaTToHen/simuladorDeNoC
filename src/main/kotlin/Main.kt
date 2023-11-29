@@ -121,8 +121,8 @@ fun Mash2D() {
 fun acoesMesh2D(tamanhoX: Int, tamanhoY: Int) {
     val matrizNodos = Array(tamanhoY) { Array(tamanhoX) { "" } }
 
-    for (i in 1 until tamanhoY+1) {
-        for (j in 1 until tamanhoX+1) {
+    for (i in 0 until tamanhoY) {
+        for (j in 0 until tamanhoX) {
             matrizNodos[i][j] = "${i}${j}"
         }
     }
@@ -164,39 +164,47 @@ fun roteamentoMesh2D(origemX: Int, origemY: Int, destinoX: Int, destinoY: Int, m
         }
 
         println("Encaminhando para o nó (${posicaoX}, ${posicaoY})")
+        println("Chegou ao destino (${posicaoX}, ${posicaoY})")
     }
-
     println("Chegou ao destino (${destinoX}, ${destinoY})")
+
 }
 
 fun MPSoC() {
-    val matrizNodos = Array(9) { Array(9) { "" } }
+    val noc_x = 4
+    val noc_y = 4
+
+    val matrizNodos = Array(noc_x) { Array(noc_y) { "" } }
 
     for (i in 0 until matrizNodos.size) {
         for (j in 0 until matrizNodos[i].size) {
             matrizNodos[i][j] = "${i}${j}"
+            println(matrizNodos[i][j])
         }
     }
 
     println("Escolha a aplicação: 1, 2 ou 3")
     print("Resposta: ")
-    val aplicacao = readLine()?.toIntOrNull() ?: return
+    val aplicacao = readLine()?.toIntOrNull()
+    if (aplicacao !in 1..3) {
+        println("Escolha de aplicação inválida.")
+        return
+    }
 
     when (aplicacao) {
-        1 -> app1(matrizNodos)
-        //2 -> app2(matrizNodos)
-        //3 -> app3(matrizNodos)
-        else -> println("Escolha de aplicação inválida.")
+        1 -> app1(matrizNodos, 0, 0)
+        //2 -> app2(matrizNodos, 2, 1)
+        //3 -> app3(matrizNodos, 3, 2)
     }
 }
 
-fun app1(matrizNodos: Array<Array<String>>) {
-    var indexX = 1
-    var indexY = 0
+fun app1(matrizNodos: Array<Array<String>>, indexX: Int, indexY: Int) {
+    val inicio = matrizNodos[0][2]
+    val destino = matrizNodos[1][1]
 
-    val inicio = matrizNodos[indexX][indexY]
-    val destino = matrizNodos[indexX + 1][indexY]
+    println("[P] [INICIANDO COMUNICAÇÃO] [${inicio}] [$destino]")
+    println("[R] [ARBITRAGEM] [${inicio}] [$destino]")
+    println("[R] [ENVIANDO] [${inicio}] [01]")
 
-    println("[P] [INICIANDO COMUNICAÇÃO] [$inicio] [$destino]")
-    println("[R] [ARBITRAGEM] [$inicio] [$destino]")
 }
+
