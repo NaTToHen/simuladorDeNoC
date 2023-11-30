@@ -8,15 +8,9 @@ fun main(args: Array<String>) {
     var escolha = readln().toInt()
 
     when (escolha) {
-        1 -> {
-            Ring()
-        }
-        2 -> {
-            Mash2D()
-        }
-        3 -> {
-            MPSoC()
-        }
+        1 -> Ring()
+        2 -> Mash2D()
+        3 -> MPSoC()
     }
 }
 
@@ -84,32 +78,11 @@ fun roteamento(source: Int, target: Int, quantNodos: Int) {
         }
 }
 
-/*fun acoesMash2D(tamanhoX: Int, tamanhoY: Int) {
-    print("informar origemX: ")
-    val origemX = readln().toInt()
-    print("informar origemY: ")
-    val origemY = readln().toInt()
-
-    print("\ninformar destinoX: ")
-    val destinoX = readln().toInt()
-    print("informar destinoY: ")
-    val destinoY = readln().toInt()
-
-    var tamanhoMatriz = readLine()!!.toInt()
-    if (tamanhoMatriz > 9) {
-        println("Tamanho da matriz inválido. Tamanho máximo é 9x9.")
-        return
-    }
-
-    var matrizNodos = Array(tamanhoMatriz) { Array(tamanhoMatriz) { Int } }
-}*/
-
 fun Mash2D() {
     print("Informe o tamanho da NoC para X: ")
     var tamanhoX = readln().toInt()
     print("Informe o tamanho da NoC para Y: ")
     var tamanhoY = readln().toInt()
-    println("\nConstrução de pacotes:")
 
     if(tamanhoX <= 9 && tamanhoY <= 9) {
         acoesMesh2D(tamanhoX, tamanhoY)
@@ -138,13 +111,13 @@ fun acoesMesh2D(tamanhoX: Int, tamanhoY: Int) {
     val destinoY = readln().toInt()
 
     if (origemX < tamanhoX && origemY < tamanhoY && destinoX < tamanhoX && destinoY < tamanhoY) {
-        roteamentoMesh2D(origemX, origemY, destinoX, destinoY, matrizNodos)
+        roteamentoMesh2D(origemX, origemY, destinoX, destinoY)
     } else {
         println("Origem e destino devem estar dentro dos limites")
     }
 }
 
-fun roteamentoMesh2D(origemX: Int, origemY: Int, destinoX: Int, destinoY: Int, matrizNodos: Array<Array<String>>) {
+fun roteamentoMesh2D(origemX: Int, origemY: Int, destinoX: Int, destinoY: Int) {
     println("Iniciando roteamento da origem (${origemX}, ${origemY}) para o destino (${destinoX}, ${destinoY}):")
 
     var posicaoX = origemX
@@ -166,8 +139,7 @@ fun roteamentoMesh2D(origemX: Int, origemY: Int, destinoX: Int, destinoY: Int, m
         println("Encaminhando para o nó (${posicaoX}, ${posicaoY})")
         println("Chegou ao destino (${posicaoX}, ${posicaoY})")
     }
-    println("Chegou ao destino (${destinoX}, ${destinoY})")
-
+    println("Chegou ao destino final (${posicaoX}, ${posicaoY})")
 }
 
 fun MPSoC() {
@@ -179,32 +151,97 @@ fun MPSoC() {
     for (i in 0 until matrizNodos.size) {
         for (j in 0 until matrizNodos[i].size) {
             matrizNodos[i][j] = "${i}${j}"
-            println(matrizNodos[i][j])
+            print(matrizNodos[i][j] + " ")
         }
+        println("")
     }
 
     println("Escolha a aplicação: 1, 2 ou 3")
     print("Resposta: ")
     val aplicacao = readLine()?.toIntOrNull()
+
     if (aplicacao !in 1..3) {
         println("Escolha de aplicação inválida.")
         return
     }
 
     when (aplicacao) {
-        1 -> app1(matrizNodos, 0, 0)
-        //2 -> app2(matrizNodos, 2, 1)
-        //3 -> app3(matrizNodos, 3, 2)
+        1 -> app1(matrizNodos)
+        2 -> app2(matrizNodos)
+        3 -> app3(matrizNodos)
     }
 }
 
-fun app1(matrizNodos: Array<Array<String>>, indexX: Int, indexY: Int) {
-    val inicio = matrizNodos[0][2]
-    val destino = matrizNodos[1][1]
+fun roteamentoNPSoC(origemX: Int, origemY: Int, destinoX: Int, destinoY: Int, matrizNodos: Array<Array<String>>) {
+    println("[P] [INICIANDO COMUNICAÇÃO] [${matrizNodos[origemX][origemY]}] [${matrizNodos[destinoX][destinoY]}]")
 
-    println("[P] [INICIANDO COMUNICAÇÃO] [${inicio}] [$destino]")
-    println("[R] [ARBITRAGEM] [${inicio}] [$destino]")
-    println("[R] [ENVIANDO] [${inicio}] [01]")
+    var posicaoX = origemX
+    var posicaoY = origemY
 
+    while (posicaoX != destinoX || posicaoY != destinoY) {
+        println("[R] [ARBITRAGEM] [${matrizNodos[posicaoX][posicaoY]}] [${matrizNodos[destinoX][destinoY]}]")
+        if(posicaoX != destinoX) {
+            if (posicaoX < destinoX) {
+                posicaoX++
+            } else if (posicaoX > destinoX) {
+                posicaoX--
+            }
+        } else {
+            if (posicaoY < destinoY) {
+                posicaoY++
+            } else if (posicaoY > destinoY) {
+                posicaoY--
+            }
+        }
+        println("[R] [ENVIANDO] [${matrizNodos[posicaoX][posicaoY]}] [${matrizNodos[destinoX][destinoY]}]")
+    }
+    println("[R] [ARBITRAGEM] [${matrizNodos[posicaoX][posicaoY]}] [${matrizNodos[destinoX][destinoY]}]")
+    println("[P] [ENCERRANDO COMUNICAÇÃO] [${matrizNodos[posicaoX][posicaoY]}] [${matrizNodos[destinoX][destinoY]}]")
 }
 
+fun app1(matrizNodos: Array<Array<String>>) {
+    var mapaNodos = mapOf(
+        "A" to intArrayOf(0,2),
+        "C" to intArrayOf(1,1),
+        "B" to intArrayOf(2,1),
+        "D" to intArrayOf(3,0)
+    )
+
+    var inicioPos = mapaNodos["A"]
+    var destinoPos = mapaNodos["C"]
+
+    roteamentoNPSoC(inicioPos!![0], inicioPos[1], destinoPos!![0], destinoPos[1], matrizNodos)
+}
+
+fun app2(matrizNodos: Array<Array<String>>) {
+
+    var mapaNodos = mapOf(
+        "T" to intArrayOf(0,3),
+        "X" to intArrayOf(1,1),
+        "W" to intArrayOf(3,2)
+    )
+
+    var inicioPos = mapaNodos["T"]
+    var destinoPos = mapaNodos["X"]
+
+    roteamentoNPSoC(inicioPos!![0], inicioPos[1], destinoPos!![0], destinoPos[1], matrizNodos)
+}
+
+fun app3(matrizNodos: Array<Array<String>>) {
+
+    var mapaNodos = mapOf(
+        "G" to intArrayOf(0,3),
+        "N" to intArrayOf(0,2),
+        "O" to intArrayOf(1,2),
+        "P" to intArrayOf(2,2),
+        "U" to intArrayOf(1,1),
+        "H" to intArrayOf(2,1),
+        "Z" to intArrayOf(3,1),
+        "V" to intArrayOf(3,0)
+    )
+
+    var inicioPos = mapaNodos["G"]
+    var destinoPos = mapaNodos["O"]
+
+    roteamentoNPSoC(inicioPos!![0], inicioPos[1], destinoPos!![0], destinoPos[1], matrizNodos)
+}
